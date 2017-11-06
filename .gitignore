@@ -2,7 +2,9 @@
 *.gem
 *.rbc
 /.config
+/config.yml
 /coverage/
+/db.sqlite3
 /InstalledFiles
 /pkg/
 /spec/reports/

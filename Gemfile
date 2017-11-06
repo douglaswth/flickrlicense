@@ -1,0 +1,10 @@
+source 'https://rubygems.org'
+
+gem 'erubis'
+gem 'flickr-login'
+gem 'flickraw'
+gem 'pry'
+gem 'sinatra'
+gem 'sinatra-contrib'
+gem 'sinatra-sequel'
+gem 'sqlite3'
