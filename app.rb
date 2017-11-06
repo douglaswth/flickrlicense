@@ -58,11 +58,11 @@ get '/logout' do
 end
 
 =begin
-def list(user)
+def list
   all_photos = []
   page = 0
   begin
-    photos = flickr.photos.search(user_id: user, extras: 'license', per_page: 500, page: page += 1)
+    photos = flickr.photos.search(user_id: :me, extras: 'license', per_page: 500, page: page += 1)
     all_photos.push(*photos.to_a)
   end until photos.size < 500
   all_photos
