@@ -1,7 +1,9 @@
 require 'flickr/login'
 require 'flickraw'
+require 'pry'
 require 'sinatra'
 require 'sinatra/config_file'
+require 'sinatra/json'
 require 'sinatra/reloader'
 require 'sinatra/sequel'
 
@@ -33,6 +35,22 @@ migration 'create users, licenses, and photos tables' do
   end
 end
 
+class User < Sequel::Model
+  one_to_many :photo, key: :owner
+  unrestrict_primary_key
+end
+
+class License < Sequel::Model
+  one_to_many :photo, key: :license
+  unrestrict_primary_key
+end
+
+class Photo < Sequel::Model
+  many_to_one :user, key: :owner
+  many_to_one :license, key: :license
+  unrestrict_primary_key
+end
+
 helpers Flickr::Login::Helpers
 helpers do
   def flickr
@@ -46,9 +64,20 @@ end
 
 before do
   redirect to('/login?perms=write') unless flickr_user
+  @user = User.find_or_create(nsid: flickr_user[:user_nsid]) do |user|
+    user.username = flickr_user[:username]
+    user.fullname = flickr_user[:fullname]
+  end
 end
 
 get '/' do
+  flickr.photos.licenses.getInfo.each do |flickr_license|
+    License.create do |license|
+      license.id = flickr_license.id
+      license.name = flickr_license.name
+      license.url = flickr_license.url
+    end
+  end if License.count == 0
   erb :index
 end
 
@@ -57,14 +86,8 @@ get '/logout' do
   redirect to('/')
 end
 
-=begin
-def list
-  all_photos = []
-  page = 0
-  begin
-    photos = flickr.photos.search(user_id: :me, extras: 'license', per_page: 500, page: page += 1)
-    all_photos.push(*photos.to_a)
-  end until photos.size < 500
-  all_photos
+get %r{/photos/([1-8])} do |page|
+  page, per_page = page.to_i, 500
+  photos = flickr.photos.search(user_id: :me, extras: 'license', per_page: per_page, page: page)
+  json page: page, per_page: per_page, photos: photos
 end
-=end
