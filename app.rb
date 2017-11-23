@@ -28,9 +28,9 @@ migration 'create users, licenses, and photos tables' do
 
   database.create_table :photos do
     column :id, Integer, primary_key: true
-    # foreign_key :user_id, :users
+    # foreign_key :user_id, :users, on_delete: :cascade, on_update: :restrict
     foreign_key :owner, :users
-    # foreign_key :license_id, :licenses
+    # foreign_key :license_id, :licenses, on_delete: :cascade, on_update: :restrict
     foreign_key :license, :licenses
     column :json, 'text'
     column :ignore, 'boolean'
@@ -48,6 +48,15 @@ migration 'rename photo owner and license columns to user_id and license_id' do
   end
 end
 
+migration 'add on delete and update constraints to photo user_id and license_id' do
+  database.alter_table :photos do
+    drop_foreign_key [:user_id]
+    add_foreign_key [:user_id], :users, on_delete: :cascade, on_update: :restrict
+    drop_foreign_key [:license_id]
+    add_foreign_key [:license_id], :licenses, on_delete: :cascade, on_update: :restrict
+  end
+end
+
 class User < Sequel::Model
   one_to_many :photo
   unrestrict_primary_key
@@ -56,6 +65,18 @@ end
 class License < Sequel::Model
   one_to_many :photo
   unrestrict_primary_key
+
+  def as_json(*)
+    {
+      id: id,
+      name: name,
+      url: url,
+    }
+  end
+
+  def to_json(*args)
+    as_json.to_json(*args)
+  end
 end
 
 class Photo < Sequel::Model
@@ -72,8 +93,12 @@ class Photo < Sequel::Model
       id: id,
       license: license_id,
       ignore: ignore,
-      image: FlickRaw.url_q(flickraw),
-      link: FlickRaw.url_photopage(flickraw),
+      img: FlickRaw.url_q(flickraw),
+      url: FlickRaw.url_photopage(flickraw),
+      title: flickraw.title,
+      public: flickraw.ispublic != 0,
+      friend: flickraw.isfriend != 0,
+      family: flickraw.isfamily != 0,
     }
   end
 
@@ -102,13 +127,14 @@ before do
 end
 
 get '/' do
-  flickr.photos.licenses.getInfo.each do |flickr_license|
+  @licenses = License.all
+  @licenses = flickr.photos.licenses.getInfo.map do |flickr_license|
     License.create do |license|
       license.id = flickr_license.id
       license.name = flickr_license.name
       license.url = flickr_license.url
     end
-  end if License.count == 0
+  end if @licenses.count == 0
   erb :index
 end
 
