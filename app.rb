@@ -151,8 +151,9 @@ get '/logout' do
 end
 
 get %r{/photos/([1-8])} do |page|
+  @user.photos_dataset.delete if params['reload'] == 'true'
   page, per_page = page.to_i, 500
-  photos = Photo.reverse(:id).limit(per_page, (page - 1) * per_page).all
+  photos = @user.photos_dataset.reverse(:id).limit(per_page, (page - 1) * per_page).all
   begin
     photos = flickr.photos.search(user_id: :me, extras: 'license', per_page: per_page, page: page).map do |flickr_photo|
       Photo.create do |photo|
@@ -168,7 +169,7 @@ get %r{/photos/([1-8])} do |page|
   rescue Sequel::UniqueConstraintViolation
     # sometimes the Flickr API will just keep repeating the same results for subsequent pages
   end
-  json path: "/photos/#{page + 1}", photos: photos if photos.count == per_page && page < 8
+  halt json path: "/photos/#{page + 1}", photos: photos if photos.count == per_page && page < 8
   json photos: photos
 end
 
