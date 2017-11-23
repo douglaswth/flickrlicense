@@ -57,13 +57,20 @@ migration 'add on delete and update constraints to photo user_id and license_id'
   end
 end
 
+migration 'add not null constraint to photo user_id and license_id' do
+  database.alter_table :photos do
+    set_column_not_null :user_id
+    set_column_not_null :license_id
+  end
+end
+
 class User < Sequel::Model
-  one_to_many :photo
+  one_to_many :photos
   unrestrict_primary_key
 end
 
 class License < Sequel::Model
-  one_to_many :photo
+  one_to_many :photos
   unrestrict_primary_key
 
   def as_json(*)
@@ -150,15 +157,42 @@ get %r{/photos/([1-8])} do |page|
     photos = flickr.photos.search(user_id: :me, extras: 'license', per_page: per_page, page: page).map do |flickr_photo|
       Photo.create do |photo|
         photo.id = flickr_photo.id
-        photo.user_id = flickr_photo.owner
+        photo.user = @user
         photo.license_id = flickr_photo.license
         photo.json = flickr_photo.to_hash.to_json
         photo.ignore = false
       end
     end if photos.count == 0
+  rescue FlickRaw::Error => e
+    halt 422, json(error: e.message)
   rescue Sequel::UniqueConstraintViolation
     # sometimes the Flickr API will just keep repeating the same results for subsequent pages
   end
   json path: "/photos/#{page + 1}", photos: photos if photos.count == per_page && page < 8
   json photos: photos
+end
+
+post '/photos' do
+  ignore = params['ignore'] == 'true'
+  ids = params['photos'] && params['photos'].is_a?(Array) ? params['photos'] : [params['photo']]
+  photos = @user.photos_dataset.where(id: ids)
+  halt 404, json(error: "Could not find photo(s) with ID(s): #{ids.map(&:to_i) - photos.map(:id)}") unless photos.count == ids.size
+  photos.update(ignore: ignore)
+  status 204
+end
+
+post '/photos/*' do |id|
+  photo = @user.photos_dataset.where(id: id).first
+  halt 404, json(error: "Could not find photo with ID: #{id}") unless photo
+  license_id = params['license'] && params['license'].to_i
+  license = License[license_id]
+  halt 422, json(error: "Could not find license with ID: #{license_id.inspect}") unless license
+  halt 422, json(error: "Could not change license of ignored photo") if photo.ignore
+  begin
+    flickr.photos.licenses.setLicense(photo_id: photo.id, license_id: license.id)
+  rescue FlickRaw::Error => e
+    halt 422, json(error: e.message)
+  end
+  photo.update(license: license)
+  status 204
 end
