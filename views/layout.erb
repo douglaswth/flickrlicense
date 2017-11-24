@@ -13,7 +13,7 @@
     </head>
     <body>
         <header container>
-            <div><span style="color: #0063dc;">flick</span><span style="color: #ff0084;">r</span> license <a href="<%= @user.photosurl %>"><img src="<%= @user.buddyicon %>"> <%= @user.username %></a> (<%= @user.fullname %>) | <a href="/logout">logout</a></div>
+            <div><span style="color: #0063dc;">flick</span><span style="color: #ff0084;">r</span> license <a href="<%= @user.photosurl %>"><img src="<%= @user.buddyicon %>"> <%= @user.username %></a> <% if @user.fullname && !@user.fullname.empty? %>(<%= @user.fullname %>)<% end %> | <a href="/logout">logout</a></div>
         </header>
         <main container>
             <%= yield %>
