@@ -1,7 +1,39 @@
-<p>Hello <%= @user.fullname %>!</p>
+<div>
+    <button id="reload_photos" type="button">reload photos</button>
+    <select id="show_license">
+        <option value="all" selected>show photos with any license</option>
+        <% @licenses.each do |license| %>
+            <option value="<%= license.id %>"><%= license.name %></option>
+        <% end %>
+    </select>
+    <select id="show_privacy">
+        <option value="all" selected>show public and private photos</option>
+        <option value="public">show only public photos</option>
+        <option value="friends/family">show photos visible to friends and family</option>
+        <option value="friends">show photos visible to only friends</option>
+        <option value="family">show photos visible to only family</option>
+        <option value="private">show completely private photos</option>
+    </select>
+    <select id="show_ignored">
+        <option value="true" selected>show ignored photos</option>
+        <option value="false">hide ignored photos</option>
+    </select>
+</div>
+
+<div id="photos" grid style="height: 66vh; overflow-y: auto;"></div>
+
+<div>
+    <select id="select_license">
+        <option value="unselected" selected>select license</option>
+        <% @licenses.each do |license| %>
+            <option value="<%= license.id %>"><%= license.name %></option>
+        <% end %>
+    </select>
+    <button disabled id="apply_license" type="button">apply license</button>
+</div>
 
 <script>
-  var licenses = <%= @licenses.to_json %>;
+var licenses = <%= @licenses.to_json %>;
 </script>
 <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
 <script src="/js/app.js"></script>

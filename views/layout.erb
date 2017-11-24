@@ -7,9 +7,14 @@
         <meta name="HandheldFriendly" content="True">
         <meta name="MobileOptimized" content="320">
 
-        <title><% if @title %><%= @title %> &middot; <% end %>Flickr License</title>
+        <title>flickr license</title>
+
+        <link rel="stylesheet" href="https://cdn.concisecss.com/v4.1/concise.min.css">
     </head>
     <body>
+        <header container>
+            <div><span style="color: #0063dc;">flick</span><span style="color: #ff0084;">r</span> license <a href="<%= @user.photosurl %>"><img src="<%= @user.buddyicon %>"> <%= @user.username %></a> (<%= @user.fullname %>) | <a href="/logout">logout</a></div>
+        </header>
         <main container>
             <%= yield %>
         </main>

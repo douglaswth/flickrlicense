@@ -13,11 +13,15 @@ enable :sessions
 
 set :database, 'sqlite://db.sqlite3'
 
+FlickRaw.api_key = settings.flickr_api_key
+FlickRaw.shared_secret = settings.flickr_shared_secret
+
 migration 'create users, licenses, and photos tables' do
   database.create_table :users do
     column :nsid, String, primary_key: true
     column :username, String
     column :fullname, String
+    # column :json, 'text'
   end
 
   database.create_table :licenses do
@@ -64,9 +68,37 @@ migration 'add not null constraint to photo user_id and license_id' do
   end
 end
 
+migration 'add json field to user' do
+  database.alter_table :users do
+    add_column :json, 'text'
+  end
+  database.select(:nsid).from(:users).select_map(:nsid).each do |nsid|
+    info = OpenStruct.new(flickr.people.getInfo(user_id: nsid).to_hash)
+    info.timezone = info.timezone.to_hash
+    info.photos = info.photos.to_hash
+    database.from(:users).where(nsid: nsid).update(json: info.to_h.to_json)
+  end
+end
+
 class User < Sequel::Model
   one_to_many :photos
   unrestrict_primary_key
+
+  def flickraw
+    @flickraw ||= OpenStruct.new(JSON.parse(json))
+  end
+
+  def buddyicon
+    if flickraw.iconserver.to_i > 0
+      "https://farm#{flickraw.iconfarm}.staticflickr.com/#{flickraw.iconserver}/buddyicons/#{nsid}.jpg"
+    else
+      "https://www.flickr.com/images/buddyicon.gif"
+    end
+  end
+
+  def photosurl
+    flickraw.photosurl
+  end
 end
 
 class License < Sequel::Model
@@ -130,6 +162,10 @@ before do
   @user = User.find_or_create(nsid: flickr_user[:user_nsid]) do |user|
     user.username = flickr_user[:username]
     user.fullname = flickr_user[:fullname]
+    info = OpenStruct.new(flickr.people.getInfo(user_id: user.nsid).to_hash)
+    info.timezone = info.timezone.to_hash
+    info.photos = info.photos.to_hash
+    user.json = info.to_h.to_json
   end
 end
 
