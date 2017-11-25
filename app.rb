@@ -42,6 +42,9 @@ migration 'create users, licenses, and photos tables' do
     foreign_key :license, :licenses
     column :json, 'text'
     column :ignore, 'boolean'
+    # column :public, 'boolean'
+    # column :friend, 'boolean'
+    # column :family, 'boolean'
   end
 end
 
@@ -89,6 +92,18 @@ migration 'add show license/privacy/ignored fields to user' do
     add_foreign_key :show_license_id, :licenses, null: true, on_delete: :set_null, on_update: :restrict
     add_column :show_privacy, Integer, default: 0, null: false
     add_column :show_ignored, 'boolean', default: true, null: false
+  end
+end
+
+migration 'add public/friend/family fields to photos' do
+  database.alter_table :photos do
+    add_column :public, 'boolean'
+    add_column :friend, 'boolean'
+    add_column :family, 'boolean'
+  end
+  database.select(:id, :json).from(:photos).select_map([:id, :json]).each do |id, json|
+    photo = OpenStruct.new(JSON.parse(json))
+    database.from(:photos).where(id: id).update(public: photo.ispublic != 0, friend: photo.isfriend != 0, family: photo.isfamily != 0)
   end
 end
 
@@ -150,9 +165,9 @@ class Photo < Sequel::Model
       img: FlickRaw.url_q(flickraw),
       url: FlickRaw.url_photopage(flickraw),
       title: flickraw.title,
-      public: flickraw.ispublic != 0,
-      friend: flickraw.isfriend != 0,
-      family: flickraw.isfamily != 0,
+      public: public,
+      friend: friend,
+      family: family,
     }
   end
 
@@ -231,6 +246,9 @@ get %r{/photos/([1-8])} do |page|
         photo.license_id = flickr_photo.license
         photo.json = flickr_photo.to_hash.to_json
         photo.ignore = false
+        photo.public = flickr_photo.ispublic != 0
+        photo.friend = flickr_photo.isfriend != 0
+        photo.family = flickr_photo.isfamily != 0
       end
     end if photos.count == 0
   rescue FlickRaw::Error => e
@@ -288,7 +306,22 @@ post '/photos/*' do |id|
   license_id = params['license'] && params['license'].to_i
   license = License[license_id]
   halt 422, json(error: "Could not find license with ID: #{license_id.inspect}") unless license
-  halt 422, json(error: "Could not change license of ignored photo") if photo.ignore
+  case @user.show_privacy
+  when :all
+    # no need to check privacy
+  when :public
+    halt 422, json(error: 'Could not change license of non public photo') unless photo.public
+  when :friends_family
+    halt 422, json(error: 'Could not change license of non friends and family photo') unless photo.friend && photo.family
+  when :friends
+    halt 422, json(error: 'Could not change license of non only friends photo') unless photo.friend && !photo.family
+  when :family
+    halt 422, json(error: 'Could not change license of non only family photo') unless !photo.friend && photo.family
+  when :private
+    halt 422, json(error: 'Could not change license of non private photo') unless !photo.public && !photo.friend && !photo.family
+  end
+  halt 422, json(error: 'Could not change license of photo with unselected license') if @user.show_license && @user.show_license != photo.license
+  halt 422, json(error: 'Could not change license of ignored photo') if photo.ignore
   begin
     flickr.photos.licenses.setLicense(photo_id: photo.id, license_id: license.id)
   rescue FlickRaw::Error => e
