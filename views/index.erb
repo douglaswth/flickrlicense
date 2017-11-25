@@ -21,12 +21,13 @@
 
 <div>
     <select id="select_license">
-        <option value="unselected" selected>select license</option>
+        <option value="" selected>select license</option>
         <% @licenses.each do |license| %>
             <option value="<%= license.id %>"><%= license.name %></option>
         <% end %>
     </select>
     <button disabled id="apply_license" type="button">apply license</button>
+    <span id="license_link"></span>
 </div>
 
 <script>
