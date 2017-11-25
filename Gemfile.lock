@@ -21,6 +21,8 @@ GEM
     rack-protection (2.0.0)
       rack
     sequel (5.2.0)
+    sequel_enum (0.1.1)
+      sequel
     sinatra (2.0.0)
       mustermann (~> 1.0)
       rack (~> 2.0)
@@ -49,6 +51,7 @@ DEPENDENCIES
   flickraw
   pry
   pry-doc
+  sequel_enum
   sinatra
   sinatra-contrib
   sinatra-sequel

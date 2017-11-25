@@ -1,22 +1,19 @@
 <div>
     <button id="reload_photos" type="button">reload photos</button>
     <select id="show_license">
-        <option value="all" selected>show photos with any license</option>
-        <% @licenses.each do |license| %>
-            <option value="<%= license.id %>"><%= license.name %></option>
+        <% @show_licenses.each do |show_license| %>
+            <option <% if show_license == @user.show_license %>selected <% end %>value="<%= show_license.id %>"><%= show_license.name %></option>
         <% end %>
     </select>
     <select id="show_privacy">
-        <option value="all" selected>show public and private photos</option>
-        <option value="public">show only public photos</option>
-        <option value="friends/family">show photos visible to friends and family</option>
-        <option value="friends">show photos visible to only friends</option>
-        <option value="family">show photos visible to only family</option>
-        <option value="private">show completely private photos</option>
+        <% @show_privacies.each do |show_privacy, name| %>
+            <option <% if show_privacy == @user.show_privacy %>selected <% end %>value="<%= show_privacy %>"><%= name %></option>
+        <% end %>
     </select>
     <select id="show_ignored">
-        <option value="true" selected>show ignored photos</option>
-        <option value="false">hide ignored photos</option>
+        <% @show_ignoreds.each do |show_ignored, name| %>
+            <option <% if show_ignored == @user.show_ignored %>selected <% end %>value="<%= show_ignored %>"><%= name %></option>
+        <% end %>
     </select>
 </div>
 
