@@ -1,26 +1,30 @@
+<div id="error" title="error"></div>
+
 <div>
-    <button id="reload_photos" type="button">reload photos</button>
-    <select id="show_license">
+    <button disabled id="reload_photos" type="button">reload photos</button>
+    <select disabled id="show_license">
         <% @show_licenses.each do |show_license| %>
             <option <% if show_license == @user.show_license %>selected <% end %>value="<%= show_license.id %>"><%= show_license.name %></option>
         <% end %>
     </select>
-    <select id="show_privacy">
+    <select disabled id="show_privacy">
         <% @show_privacies.each do |show_privacy, name| %>
             <option <% if show_privacy == @user.show_privacy %>selected <% end %>value="<%= show_privacy %>"><%= name %></option>
         <% end %>
     </select>
-    <select id="show_ignored">
+    <select disabled id="show_ignored">
         <% @show_ignoreds.each do |show_ignored, name| %>
             <option <% if show_ignored == @user.show_ignored %>selected <% end %>value="<%= show_ignored %>"><%= name %></option>
         <% end %>
     </select>
 </div>
 
-<div id="photos" grid style="height: 66vh; overflow-y: auto;"></div>
+<div id="photos" grid style="height: 66vh; overflow-y: auto;">
+    <div class="spinner"></div>
+</div>
 
 <div>
-    <select id="select_license">
+    <select disabled id="select_license">
         <option value="" selected>select license</option>
         <% @licenses.each do |license| %>
             <option value="<%= license.id %>"><%= license.name %></option>
@@ -34,4 +38,5 @@
 var licenses = <%= @licenses.to_json %>;
 </script>
 <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
 <script src="/js/app.js"></script>
