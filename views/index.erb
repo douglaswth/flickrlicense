@@ -3,8 +3,9 @@
 <div>
     <button disabled id="reload_photos" type="button">reload photos</button>
     <select disabled id="show_license">
-        <% @show_licenses.each do |show_license| %>
-            <option <% if show_license == @user.show_license %>selected <% end %>value="<%= show_license.id %>"><%= show_license.name %></option>
+        <option <% unless @user.show_license %>selected <% end %>value="">show photos with any license</option>
+        <% @licenses.each do |license| %>
+            <option <% if license == @user.show_license %>selected <% end %>value="<%= license.id %>"><%= license.name %></option>
         <% end %>
     </select>
     <select disabled id="show_privacy">
@@ -19,7 +20,7 @@
     </select>
 </div>
 
-<div id="photos" grid style="height: 66vh; overflow-y: auto;">
+<div grid id="photos" style="height: 66vh; overflow-y: auto;">
     <div class="spinner"></div>
 </div>
 

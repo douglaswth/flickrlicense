@@ -24,7 +24,54 @@ $(function() {
         controlsDisabled(true);
         $.getJSON(path, params, function(data) {
             photosTag.children('.spinner').remove();
-            console.log(data);
+
+            for (let photo of data.photos) {
+                let privacy;
+                let privacyTag = $('<span class="tag-box">');
+
+                if (photo.public) {
+                    privacy = 'public';
+                    privacyTag.text('public');
+                } else if (photo.friend && photo.family) {
+                    privacy = 'friends_family';
+                    privacyTag.text('friends&family');
+                } else if (photo.friend) {
+                    privacy = 'friends';
+                    privacyTag.text('friends');
+                } else if (photo.family) {
+                    privacy = 'family';
+                    privacyTag.text('family');
+                } else {
+                    privacy = 'private';
+                    privacyTag.text('private');
+                }
+
+                let photoTag = $('<div column>').addClass('license-' + photo.license).addClass(privacy);
+                let ignoreTag = $('<button>').click(function() {
+                    console.log(photo);
+                });
+
+                if (photo.ignore) {
+                    photoTag.addClass('ignored');
+                    ignoreTag.text('ignored');
+                } else {
+                    ignoreTag.addClass('-bordered').text('ignore');
+                }
+
+                let license = licenses[photo.license];
+
+                photoTag.append($('<div class="card-box">').append([
+                    $('<a>', {href: photo.url, target: '_blank'}).append($('<img>', {title: photo.title, src: photo.img})),
+                    $('<div class="card-content">').append([
+                        $('<span>', {class: 'tag-box', title: license.name}).html(license.icon),
+                        '<br>',
+                        privacyTag,
+                        '<br>',
+                        ignoreTag,
+                    ]),
+                ]));
+                photosTag.append(photoTag);
+            }
 
             if (data.path) {
                 reloadPhotos({}, data.path);
@@ -97,10 +144,11 @@ $(function() {
     showIgnoredTag.change(showIgnored);
     selectLicenseTag.change(function() {
         applyLicenseTag.prop('disabled', selectLicenseTag.val() == '');
-        licenseLinkTag.empty();
         var license = licenses[selectLicenseTag.val()];
         if (license) {
-            licenseLinkTag.append(license.url ? $('<a>', {href: license.url, target: '_blank'}).text(license.name) : license.name);
+            licenseLinkTag.html(license.url ? $('<a>', {href: license.url, target: '_blank'}).html(license.iconname) : license.iconname);
+        } else {
+            licenseLinkTag.empty();
         }
     });
     applyLicenseTag.click(function() {

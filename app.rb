@@ -135,11 +135,40 @@ class License < Sequel::Model
   one_to_many :photos
   unrestrict_primary_key
 
+  def icon
+    case url
+    when %r{/by-nc-sa/}
+      '<i class="cc cc-cc"></i><i class="cc cc-by"></i><i class="cc cc-nc"></i><i class="cc cc-sa"></i>'
+    when %r{/by-nc/}
+      '<i class="cc cc-cc"></i><i class="cc cc-by"></i><i class="cc cc-nc"></i>'
+    when %r{/by-nc-nd/}
+      '<i class="cc cc-cc"></i><i class="cc cc-by"></i><i class="cc cc-nc"></i><i class="cc cc-nd"></i>'
+    when %r{/by/}
+      '<i class="cc cc-cc"></i><i class="cc cc-by"></i>'
+    when %r{/by-sa/}
+      '<i class="cc cc-cc"></i><i class="cc cc-by"></i><i class="cc cc-sa"></i>'
+    when %r{/by-nd/}
+      '<i class="cc cc-cc"></i><i class="cc cc-by"></i><i class="cc cc-nd"></i>'
+    when %r{/commons/}, %r{/mark/}
+      '<i class="cc cc-pd-alt"></i>'
+    when %r{/zero/}
+      '<i class="cc cc-zero"></i>'
+    else
+      '©'
+    end
+  end
+
+  def icon_name
+    icon + ' ' + name
+  end
+
   def as_json(*)
     {
       id: id,
       name: name,
       url: url,
+      icon: icon,
+      iconname: icon_name,
     }
   end
 
@@ -211,9 +240,6 @@ get '/' do
       license.url = flickr_license.url
     end
   end if @licenses.count == 0
-  @show_licenses = [
-    OpenStruct.new(id: nil, name: 'show photos with any license'),
-  ] + @licenses
   @show_privacies = {
     all: 'show public and private photos',
     public: 'show only public photos',
