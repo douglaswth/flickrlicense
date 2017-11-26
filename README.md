@@ -6,9 +6,17 @@ A thingy to update Flickr photo licenses
 
 * [Ruby]
   * [Bundler]
+* [jQuery]
+* [jQuery UI]
+* [Concise CSS]
+* [Creative Commons Web Font]
 
 [Ruby]: https://www.ruby-lang.org/
 [Bundler]: https://bundler.io/
+[jQuery]: https://jquery.com/
+[jQuery UI]: https://jqueryui.com/
+[Concise CSS]: http://concisecss.com/
+[Creative Commons Web Font]: https://cc-icons.github.io/
 
 ## Setup
 
