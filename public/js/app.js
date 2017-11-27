@@ -48,7 +48,23 @@ $(function() {
 
                 let photoTag = $('<div column>').addClass('license-' + photo.license).addClass(privacy);
                 let ignoreTag = $('<button>').click(function() {
-                    console.log(photo);
+                    ignore = !photo.ignore;
+                    ignoreTag.prop('disabled', true)
+                    $.post('/photos', {ignore: ignore, photo: photo.id}, function() {
+                        photo.ignore = ignore;
+
+                        if (ignore) {
+                            photoTag.addClass('ignored');
+                            ignoreTag.removeClass('-bordered').text('ignored');
+                        } else {
+                            photoTag.removeClass('ignored');
+                            ignoreTag.addClass('-bordered').text('ignore');
+                        }
+
+                        ignoreTag.prop('disabled', false)
+                    }).fail(function() {
+                        ignoreTag.prop('disabled', false)
+                    });
                 });
 
                 if (photo.ignore) {
