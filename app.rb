@@ -243,10 +243,10 @@ get '/' do
   @show_privacies = {
     all: 'show public and private photos',
     public: 'show only public photos',
-    friends_family: 'show photos visible to friends and family',
-    friends: 'show photos visible to only friends',
-    family: 'show photos visible to only family',
-    private: 'show completely private photos',
+    friends_family: 'show only photos visible to friends and family',
+    friends: 'show only photos visible to only friends',
+    family: 'show only photos visible to only family',
+    private: 'show only completely private photos',
   }
   @show_ignoreds = {
     true => 'show ignored photos',

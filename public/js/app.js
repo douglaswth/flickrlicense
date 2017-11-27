@@ -20,6 +20,31 @@ $(function() {
         selectLicenseTag.prop('disabled', disabled)
     }
 
+    function filterPhotos() {
+        photosTag.children('.photo').each(function(index, element) {
+            var photoTag = $(element);
+            var show = true;
+
+            if (showLicenseVal != '' && !photoTag.hasClass('license-' + showLicenseVal)) {
+                show = false;
+            }
+
+            if (showPrivacyVal != 'all' && !photoTag.hasClass(showPrivacyVal)) {
+                show = false;
+            }
+
+            if (showIgnoredVal != 'true' && photoTag.hasClass('ignored')) {
+                show = false;
+            }
+
+            if (show) {
+                photoTag.show();
+            } else {
+                photoTag.hide();
+            }
+        });
+    }
+
     function reloadPhotos(params = {}, path = '/photos/1') {
         controlsDisabled(true);
         $.getJSON(path, params, function(data) {
@@ -46,7 +71,7 @@ $(function() {
                     privacyTag.text('private');
                 }
 
-                let photoTag = $('<div column>').addClass('license-' + photo.license).addClass(privacy);
+                let photoTag = $('<div class="photo" column>').addClass('license-' + photo.license).addClass(privacy);
                 let ignoreTag = $('<button>').click(function() {
                     ignore = !photo.ignore;
                     ignoreTag.prop('disabled', true)
@@ -60,6 +85,8 @@ $(function() {
                             photoTag.removeClass('ignored');
                             ignoreTag.addClass('-bordered').text('ignore');
                         }
+
+                        filterPhotos();
 
                         ignoreTag.prop('disabled', false)
                     }).fail(function() {
@@ -92,9 +119,7 @@ $(function() {
             if (data.path) {
                 reloadPhotos({}, data.path);
             } else {
-                showLicenseTag.change();
-                showPrivacyTag.change();
-                showIgnoredTag.change();
+                filterPhotos();
                 controlsDisabled(false);
             }
         }).fail(function() {
@@ -104,7 +129,7 @@ $(function() {
 
     function showLicense() {
         if (showLicenseVal == showLicenseTag.val()) {
-            console.log(showLicenseVal);
+            filterPhotos();
         } else {
             $.post('/user', {show_license: showLicenseTag.val()}, function() {
                 showLicenseVal = showLicenseTag.val();
@@ -117,7 +142,7 @@ $(function() {
 
     function showPrivacy() {
         if (showPrivacyVal == showPrivacyTag.val()) {
-            console.log(showPrivacyVal);
+            filterPhotos();
         } else {
             $.post('/user', {show_privacy: showPrivacyTag.val()}, function() {
                 showPrivacyVal = showPrivacyTag.val();
@@ -130,7 +155,7 @@ $(function() {
 
     function showIgnored() {
         if (showIgnoredVal == showIgnoredTag.val()) {
-            console.log(showIgnoredVal);
+            filterPhotos();
         } else {
             $.post('/user', {show_ignored: showIgnoredTag.val()}, function() {
                 showIgnoredVal = showIgnoredTag.val();
