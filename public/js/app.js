@@ -71,7 +71,7 @@ $(function() {
                     privacyTag.text('private');
                 }
 
-                let photoTag = $('<div class="photo" column>').addClass('license-' + photo.license).addClass(privacy);
+                let photoTag = $('<div class="photo" column>').addClass('license-' + photo.license).addClass(privacy).data('photo', photo);
                 let ignoreTag = $('<button>').click(function() {
                     ignore = !photo.ignore;
                     ignoreTag.prop('disabled', true)
