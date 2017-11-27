@@ -130,7 +130,7 @@ $(function() {
         if (request.responseJSON && request.responseJSON.error) {
             errorTag.text(request.responseJSON.error);
         } else {
-            errorTag.empty().append($('<div>').text(request.status + ' ' + error), $('<iframe>', {style: 'height: 100%; width: 100%;', srcdoc: request.responseText}));
+            errorTag.empty().append($('<div>').text(request.status + ' ' + error), $('<iframe>', {srcdoc: request.responseText}));
         }
         errorTag.dialog('open');
     });

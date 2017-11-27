@@ -15,6 +15,21 @@
         <link href="https://cdn.rawgit.com/cc-icons/cc-icons/1.2.1/css/cc-icons.min.css" rel="stylesheet">
 
         <style>
+        .flickrblue {
+            color: #0063dc;
+        }
+        .flickrpink {
+            color: #ff0084;
+        }
+        #error iframe {
+            height: 100%;
+            width: 100%;
+        }
+        #photos {
+            height: 66vh;
+            overflow-y: auto;
+        }
+        /* work around the '*+* { margin-top: 1.5rem; }' rule from Concise CSS that interferes with CC Icons */
         i.cc {
             margin-top: 0px;
         }
@@ -23,7 +38,7 @@
     <body>
         <header container>
             <div grid="center">
-                <div column><span style="color: #0063dc;">flick</span><span style="color: #ff0084;">r</span> license</div>
+                <div column><span class="flickrblue">flick</span><span class="flickrpink">r</span> license</div>
                 <div column style="text-align: right;"><a href="<%= @user.photosurl %>"><img src="<%= @user.buddyicon %>"> <%= @user.username %></a> <% if @user.fullname && !@user.fullname.empty? %>(<%= @user.fullname %>)<% end %> | <a href="/logout">logout</a></div>
             </div>
         </header>
