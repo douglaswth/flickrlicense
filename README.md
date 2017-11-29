@@ -6,6 +6,10 @@ A thingy to update Flickr photo licenses
 
 * [Ruby]
   * [Bundler]
+  * [Flickr Login]
+  * [Flickraw]
+  * [Sequel]
+  * [Sinatra]
 * [jQuery]
 * [jQuery UI]
 * [Concise CSS]
@@ -13,6 +17,10 @@ A thingy to update Flickr photo licenses
 
 [Ruby]: https://www.ruby-lang.org/
 [Bundler]: https://bundler.io/
+[Flickr Login]: https://github.com/janko-m/flickr-login
+[Flickraw]: https://hanklords.github.io/flickraw/
+[Sinatra]: http://sinatrarb.com/
+[Sequel]: http://sequel.jeremyevans.net/
 [jQuery]: https://jquery.com/
 [jQuery UI]: https://jqueryui.com/
 [Concise CSS]: http://concisecss.com/
