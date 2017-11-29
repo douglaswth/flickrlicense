@@ -26,8 +26,13 @@
             width: 100%;
         }
         #photos {
+            flex-wrap: wrap;
             height: 66vh;
             overflow-y: auto;
+        }
+        #photos .photo {
+            flex-grow: 0;
+            padding-bottom: 2rem;
         }
         /* work around the '*+* { margin-top: 1.5rem; }' rule from Concise CSS that interferes with CC Icons */
         i.cc {
