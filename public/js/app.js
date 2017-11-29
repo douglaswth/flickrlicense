@@ -17,7 +17,8 @@ $(function() {
         showLicenseTag.prop('disabled', disabled);
         showPrivacyTag.prop('disabled', disabled);
         showIgnoredTag.prop('disabled', disabled);
-        selectLicenseTag.prop('disabled', disabled)
+        selectLicenseTag.prop('disabled', disabled);
+        photosTag.find('.photo button').prop('disabled', disabled);
     }
 
     function filterPhotos() {
@@ -106,7 +107,7 @@ $(function() {
                 photoTag.append($('<div class="card-box">').append([
                     $('<a>', {href: photo.url, target: '_blank'}).append($('<img>', {title: photo.title, src: photo.img})),
                     $('<div class="card-content">').append([
-                        $('<span>', {class: 'tag-box', title: license.name}).html(license.icon),
+                        $('<span>', {class: 'license tag-box', title: license.name}).html(license.icon),
                         '<br>',
                         privacyTag,
                         '<br>',
@@ -166,6 +167,37 @@ $(function() {
         }
     }
 
+    function applyLicense(license, photos, index = 0) {
+        if (index >= photos.length) {
+            applyLicenseTag.prop('disabled', false);
+            return controlsDisabled(false);
+        }
+
+        applyLicenseTag.prop('disabled', true);
+        controlsDisabled(true);
+
+        var photoTag = $(photos[index]);
+        var photo = photoTag.data('photo');
+
+        if (photo.ignore || photo.license == license) {
+            applyLicense(license, photos, ++index);
+        } else {
+            $.post(photo.path, {license: license}, function() {
+                photoTag.removeClass('license-' + photo.license).addClass('license-' + license);
+                photo.license = license;
+                {
+                    let license = licenses[photo.license];
+                    photoTag.find('.license').attr('title', license.name).html(license.icon);
+                }
+                filterPhotos();
+                applyLicense(license, photos, ++index);
+            }).fail(function() {
+                applyLicenseTag.prop('disabled', false);
+                controlsDisabled(false);
+            });
+        }
+    }
+
     errorTag.dialog({autoOpen: false, modal: true});
     $(document).ajaxError(function(event, request, settings, error) {
         if (request.responseJSON && request.responseJSON.error) {
@@ -193,7 +225,7 @@ $(function() {
         }
     });
     applyLicenseTag.click(function() {
-        console.log(selectLicenseTag.val());
+        applyLicense(selectLicenseTag.val(), photosTag.children('.photo:visible'));
     });
 
     reloadPhotos();

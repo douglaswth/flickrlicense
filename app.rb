@@ -197,6 +197,7 @@ class Photo < Sequel::Model
       public: public,
       friend: friend,
       family: family,
+      path: "/photos/#{id}",
     }
   end
 
