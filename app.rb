@@ -234,13 +234,16 @@ end
 
 get '/' do
   @licenses = License.all
-  @licenses = flickr.photos.licenses.getInfo.map do |flickr_license|
-    License.create do |license|
-      license.id = flickr_license.id
-      license.name = flickr_license.name
-      license.url = flickr_license.url
+  if @licenses.count == 0
+    flickr.photos.licenses.getInfo.each do |flickr_license|
+      License.create do |license|
+        license.id = flickr_license.id
+        license.name = flickr_license.name
+        license.url = flickr_license.url
+      end
     end
-  end if @licenses.count == 0
+    @licenses = License.all
+  end
   @show_privacies = {
     all: 'show public and private photos',
     public: 'show only public photos',
