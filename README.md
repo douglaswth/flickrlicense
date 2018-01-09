@@ -2,6 +2,8 @@
 
 A thingy to update Flickr photo licenses
 
+![screenshot](screenshot.png)
+
 ## Dependencies
 
 * [Ruby]
