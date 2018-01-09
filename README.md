@@ -51,7 +51,7 @@ The app should now be running at [localhost:9292] and you can login with your Fl
 
 ## License
 
->   flickrlicense -- A thingy to update Flickr photo licenses
+>   flickrlicense -- A thingy to update Flickr photo licenses<br>
 >   Copyright (C) 2017  Douglas Thrift
 >
 >   This program is free software: you can redistribute it and/or modify
