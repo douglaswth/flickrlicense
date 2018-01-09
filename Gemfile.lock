@@ -1,7 +1,7 @@
 GEM
   remote: https://rubygems.org/
   specs:
-    backports (3.10.3)
+    backports (3.11.0)
     coderay (1.1.2)
     erubis (2.7.0)
     flickr-login (0.0.3)
@@ -20,7 +20,7 @@ GEM
     rack (2.0.3)
     rack-protection (2.0.0)
       rack
-    sequel (5.3.0)
+    sequel (5.4.0)
     sequel_enum (0.1.1)
       sequel
     sinatra (2.0.0)
@@ -58,4 +58,4 @@ DEPENDENCIES
   sqlite3
 
 BUNDLED WITH
-   1.16.0
+   1.16.1
