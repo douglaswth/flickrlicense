@@ -1,4 +1,21 @@
 <!DOCTYPE HTML>
+<!--
+    flickrlicense -- A thingy to update Flickr photo licenses
+    Copyright (C) 2017  Douglas Thrift
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as published
+    by the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
 <html lang="en">
     <head>
         <meta charset="utf-8">
@@ -43,7 +60,7 @@
     <body>
         <header container>
             <div grid="center">
-                <div column><span class="flickrblue">flick</span><span class="flickrpink">r</span> license</div>
+                <div column><span class="flickrblue">flick</span><span class="flickrpink">r</span> license (<a href="<%= settings.agpl_src_url %>">source</a>)</div>
                 <div column style="text-align: right;"><a href="<%= @user.photosurl %>"><img src="<%= @user.buddyicon %>"> <%= @user.username %></a> <% if @user.fullname && !@user.fullname.empty? %>(<%= @user.fullname %>)<% end %> | <a href="/logout">logout</a></div>
             </div>
         </header>

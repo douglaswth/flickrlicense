@@ -48,3 +48,21 @@ bundle exec rackup
 The app should now be running at [localhost:9292] and you can login with your Flickr account.
 
 [localhost:9292]: http://localhost:9292/
+
+## License
+
+>   flickrlicense -- A thingy to update Flickr photo licenses
+>   Copyright (C) 2017  Douglas Thrift
+>
+>   This program is free software: you can redistribute it and/or modify
+>   it under the terms of the GNU Affero General Public License as published
+>   by the Free Software Foundation, either version 3 of the License, or
+>   (at your option) any later version.
+>
+>   This program is distributed in the hope that it will be useful,
+>   but WITHOUT ANY WARRANTY; without even the implied warranty of
+>   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>   GNU Affero General Public License for more details.
+>
+>   You should have received a copy of the GNU Affero General Public License
+>   along with this program.  If not, see <http://www.gnu.org/licenses/>.
