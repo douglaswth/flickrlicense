@@ -28,6 +28,8 @@ $(function() {
     var selectLicenseTag = $('#select_license');
     var applyLicenseTag = $('#apply_license');
     var licenseLinkTag = $('#license_link');
+    var selectedCountTag = $('#selected_count');
+    var selectedNounTag = $('#selected_noun');
 
     function controlsDisabled(disabled) {
         reloadPhotosTag.prop('disabled', disabled);
@@ -39,9 +41,11 @@ $(function() {
     }
 
     function filterPhotos() {
+        var count = 0;
         photosTag.children('.photo').each(function(index, element) {
             var photoTag = $(element);
             var show = true;
+            var ignore = photoTag.hasClass('ignored');
 
             if (showLicenseVal != '' && !photoTag.hasClass('license-' + showLicenseVal)) {
                 show = false;
@@ -51,16 +55,22 @@ $(function() {
                 show = false;
             }
 
-            if (showIgnoredVal != 'true' && photoTag.hasClass('ignored')) {
+            if (showIgnoredVal != 'true' && ignore) {
                 show = false;
             }
 
             if (show) {
+                if (!ignore) {
+                    count++;
+                }
+
                 photoTag.show();
             } else {
                 photoTag.hide();
             }
         });
+        selectedCountTag.text(count);
+        selectedNounTag.text(count == 1 ? "photo" : "photos");
     }
 
     function reloadPhotos(params = {}, path = '/photos/1') {
