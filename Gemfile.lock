@@ -53,7 +53,7 @@ GEM
     tilt (2.0.8)
     tzinfo (1.2.5)
       thread_safe (~> 0.1)
-    yard (0.9.16)
+    yard (0.9.25)
 
 PLATFORMS
   ruby
