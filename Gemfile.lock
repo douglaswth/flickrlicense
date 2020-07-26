@@ -26,7 +26,7 @@ GEM
     pry-doc (0.13.5)
       pry (~> 0.11)
       yard (~> 0.9.11)
-    rack (2.0.6)
+    rack (2.2.3)
     rack-protection (2.0.4)
       rack
     sequel (5.14.0)
