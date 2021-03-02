@@ -1,0 +1,9 @@
+version: 2
+updates:
+  - package-ecosystem: bundler
+    directory: /
+    schedule:
+      interval: weekly
+      day: saturday
+      time: "12:00"
+      timezone: America/Los_Angeles
