@@ -15,7 +15,7 @@ GEM
     pry (0.14.2)
       coderay (~> 1.1)
       method_source (~> 1.0)
-    pry-doc (1.4.0)
+    pry-doc (1.5.0)
       pry (~> 0.11)
       yard (~> 0.9.11)
     rack (2.2.6.4)
@@ -42,9 +42,7 @@ GEM
     sqlite3 (1.7.0)
       mini_portile2 (~> 2.8.0)
     tilt (2.0.11)
-    webrick (1.7.0)
-    yard (0.9.28)
-      webrick (~> 1.7.0)
+    yard (0.9.34)
 
 PLATFORMS
   ruby
