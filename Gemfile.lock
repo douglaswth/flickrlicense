@@ -19,9 +19,9 @@ GEM
       coderay (~> 1.1)
       method_source (~> 1.0)
       reline (>= 0.6.0)
-    pry-doc (1.6.0)
+    pry-doc (1.7.0)
       pry (~> 0.11)
-      yard (~> 0.9.11)
+      yard (~> 0.9.21)
     rack (3.2.3)
     rack-protection (4.2.1)
       base64 (>= 0.1.0)
@@ -55,7 +55,7 @@ GEM
     sqlite3 (2.9.0)
       mini_portile2 (~> 2.8.0)
     tilt (2.6.1)
-    yard (0.9.37)
+    yard (0.9.38)
 
 PLATFORMS
   ruby
