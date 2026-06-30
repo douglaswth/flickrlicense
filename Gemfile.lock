@@ -55,7 +55,7 @@ GEM
     sqlite3 (2.9.5)
       mini_portile2 (~> 2.8.0)
     tilt (2.6.1)
-    yard (0.9.42)
+    yard (0.9.44)
 
 PLATFORMS
   ruby
